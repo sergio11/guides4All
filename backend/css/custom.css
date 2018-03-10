@@ -1,0 +1,65 @@
+#modal-createDepartment {
+    z-index: 1080 !important;
+}
+
+table{counter-reset:section;}
+.count:before
+{
+    counter-increment:section;
+    content:counter(section);
+}
+
+.leaflet-popup-content {
+    width:auto !important;
+}
+
+.skin-red-light .sidebar-menu>li.header {
+    background: #DD4B39;
+    font-weight: bold;
+    color: #f9fafc;
+}
+
+.skin-green-light .sidebar-menu>li.header{
+    background: #00A65A;
+    font-weight: bold;
+    color:#f9fafc;
+}
+
+
+.login-page{
+    background-image: url("http://guide4all.es/img/back.jpg");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: cover;
+    background-position: center;
+}
+
+.login-page2{
+    background-image: url("http://guide4all.es/img/back3.jpg");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: cover;
+    background-position: center;
+}
+
+.login-page background-image {
+    filter: blur(15px);
+}
+
+
+.bg-green{
+    border: 0px;
+}
+
+.bg-red{
+    border: 0px;
+}
+
+.imgLogo2{
+    width: 100%;
+}
+
+
+.boxForm{
+    width: 100%;
+}

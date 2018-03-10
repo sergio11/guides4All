@@ -1,0 +1,160 @@
+<!----------------------------------------------------------------------------------------------------->
+<!--                                    PAGE DEPARTMENTS                                             -->
+<!----------------------------------------------------------------------------------------------------->
+<div id="pageManagementDepartments" class="content-wrapper page hidden">
+    <section class="content-header">
+        <h1>
+            Departamentos
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Gestión</a></li>
+            <li><a href="#">Departamentos</a></li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <!-- Tabla departamentos ----------------------------------------v--->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Listado Departamentos</h3>
+                <button class="btn btn-prymary pull-right" onclick="moduleDepartments.modalCreateOpen()">Nuevo
+                    departamento
+                </button>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="tableDepartaments" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Nombre</th>
+                        <th style="width: 150px">Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="department in departments">
+                        <td class="count"></td>
+                        <td>{{ department.name }}</td>
+                        <td>
+                            <center>
+
+                                <button class="bg-green"
+                                        v-bind:onclick="'javascript:moduleDepartments.openModalEdit(\'' + department.id +'\',\'' + department.name+ '\');'">
+                                    Editar
+                                </button>
+                                <button class="bg-red"
+                                        v-bind:onclick="'javascript:moduleDepartments.openModalRemove(\'' + department.id +'\',\'' + department.name+ '\');'">
+                                    Eliminar
+                                </button>
+                            </center>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Fin tabla departamentos-------------------------------------^--->
+    </section>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL CREATE DEPARTMENT                                         -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-createDepartment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Crear Departamento</h4>
+            </div>
+            <div class="modal-body">
+                <div v-bind:class="'form-group '+ modalCreateDepartament.inputName.hasError">
+                    <label for="input-modalCreateDepartmentName">Nombre</label>
+                    <input  id="input-modalCreateDepartmentName"
+                            class="form-control"
+                            placeholder="Nombre departamento"
+                            v-model="modalCreateDepartament.inputName.value"
+                            @input="modalCreateDepartamentName_change">
+                    <span class="help-block">{{modalCreateDepartament.inputName.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalCreateDepartmentCreate"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalCreateDepartament.btnCreate.disabled"
+                        onclick="moduleDepartments.create()">Crear Departamento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                   MODAL EDIT DEPARTMENT                                         -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-editDepartment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Editar Departamento</h4>
+            </div>
+
+            <div class="modal-body">
+                <div v-bind:class="'form-group '+ modalEditDepartament.inputName.hasError">
+                    <label for="input-modalEditDepartmentName">Nombre</label>
+                    <input  id="input-modalEditDepartmentName"
+                            class="form-control"
+                            placeholder="Nombre departamento"
+                            v-model="modalEditDepartament.inputName.value"
+                            @input="modalEditDepartamentName_change">
+                    <span class="help-block">{{modalEditDepartament.inputName.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalEditDepartmentSave"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalEditDepartament.btnSave.disabled"
+                        onclick="moduleDepartments.edit()">Guardar Departamento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL REMOVE DEPARTMENT                                         -->
+<!----------------------------------------------------------------------------------------------------->
+
+<div class="modal fade" id="modal-removeDepartment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Eliminar Departamento</h4>
+            </div>
+            <input type="hidden" id="input-modalRemoveDepartmentId">
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar el departamento: <b>{{modalDeleteDepartament.name}}</b>
+                    ?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalDeleteDepartmentDelete" onclick="moduleDepartments.remove()" type="button"
+                        class="btn btn-danger">Eliminar Departamento
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

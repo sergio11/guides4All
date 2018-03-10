@@ -1,0 +1,35 @@
+.customMap {
+
+    padding-bottom: 50%;
+    position: relative;
+    width: 100%;
+    height: 50%;
+    opacity: 0;
+}
+
+.leaflet-map-pane {
+    z-index: 2 !important;
+}
+
+.leaflet-google-layer {
+    z-index: 1 !important;
+}
+
+.awesome-marker i {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.leaflet-popup-content {
+    width:auto !important;
+}
+
+.entry:not(:first-of-type)
+{
+    margin-top: 10px;
+}
+
+.glyphicon
+{
+    font-size: 12px;
+}

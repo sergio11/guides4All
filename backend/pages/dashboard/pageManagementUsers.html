@@ -1,0 +1,247 @@
+<!----------------------------------------------------------------------------------------------------->
+<!--                                    PAGE USERS                                                   -->
+<!----------------------------------------------------------------------------------------------------->
+<div id="pageManagementUsers" class="content-wrapper page">
+    <section class="content-header">
+        <h1>
+            Usuarios
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Gestión</a></li>
+            <li><a href="#">Usuarios</a></li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Listado Usuarios</h3>
+                <button class="btn btn-prymary pull-right" onclick="moduleUsers.modalCreateOpen()">Nuevo usuario
+                </button>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="tableUsers" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Departamento</th>
+                        <th style="width: 150px">Acción</th>
+                    </tr>
+                    </thead>
+                    <tbody v-for="department in departments">
+
+                    <tr v-for="user in department.users">
+                        <td class="count"></td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{department.name}}</td>
+                        <td>
+                            <center>
+                                <button class="bg-green"
+                                        v-bind:onclick="'javascript:moduleUsers.modalEditOpen(\'' + user.id + '\');'">
+                                    Editar
+                                </button>
+                                <button class="bg-red"
+                                        v-bind:onclick="'javascript:moduleUsers.modalRemoveOpen(\'' + user.id +'\',\'' + user.name+ '\');'">
+                                    Eliminar
+                                </button>
+                            </center>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL CREATE USER                                               -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-createUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Crear Usuario</h4>
+            </div>
+            <div class="modal-body">
+                <div v-bind:class="'form-group '+ modalCreateUser.inputName.hasError">
+                    <label for="input-modalCreateUserName">Nombre</label>
+                    <input  id="input-modalCreateUserName"
+                            class="form-control"
+                            placeholder="Nombre usuario"
+                            v-model="modalCreateUser.inputName.value"
+                            @input="modalCreateUserName_change">
+                    <span class="help-block">{{modalCreateUser.inputName.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalCreateUser.inputEmail.hasError">
+                    <label for="input-modalCreateUserEmail">Email</label>
+                    <input  id="input-modalCreateUserEmail"
+                            class="form-control"
+                            placeholder="Email"
+                            v-model="modalCreateUser.inputEmail.value"
+                            @input="modalCreateUserEmail_change">
+                    <span class="help-block">{{modalCreateUser.inputEmail.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalCreateUser.inputPassword.hasError">
+                    <label for="input-modalCreateUserPassword">Contraseña</label>
+                    <input  id="input-modalCreateUserPassword"
+                            class="form-control"
+                            placeholder="Constraseña"
+                            type="password"
+                            v-model="modalCreateUser.inputPassword.value"
+                            @input="modalCreateUserPassword_change">
+                    <span class="help-block">{{modalCreateUser.inputPassword.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalCreateUser.inputPasswordRepeat.hasError">
+                    <label for="input-modalCreateUserPasswordRepeat">Repetición Contraseña</label>
+                    <input  id="input-modalCreateUserPasswordRepeat"
+                            class="form-control"
+                            placeholder="Repetición Contraseña"
+                            type="password"
+                            v-model="modalCreateUser.inputPasswordRepeat.value"
+                            @input="modalCreateUserPasswordRepeat_change">
+                    <span class="help-block">{{modalCreateUser.inputPasswordRepeat.msgError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Departamento</label>
+                    <div class="bootstrap-filestyle input-group">
+                        <select id="input-modalCreateUserSelectDepartment"
+                                class="form-control"
+                                v-model="modalCreateUser.inputDepartment.value">
+                            <option v-bind:value="department.id" v-for="department in departments">
+                                {{department.name}}
+                            </option>
+                        </select>
+
+                        <!--Button nuevo departamento-->
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default " onclick="moduleDepartments.modalCreateOpen()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                        <!--Fin Button nuevo departamento-->
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalCreateDepartmentCreate"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalCreateUser.btnCreate.disabled"
+                        onclick="moduleUsers.create()">Crear Usuario
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL Edit USER                                                 -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-editUser">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Editar Usuario</h4>
+            </div>
+            <div class="modal-body">
+                <div v-bind:class="'form-group '+ modalEditUser.inputName.hasError">
+                    <label for="input-modalEditUserName">Nombre</label>
+                    <input  id="input-modalEditUserName"
+                            class="form-control"
+                            placeholder="Nombre usuario"
+                            v-model="modalEditUser.inputName.value"
+                            @input="modalEditUserName_change">
+                    <span class="help-block">{{modalEditUser.inputName.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalEditUser.inputEmail.hasError">
+                    <label for="input-modalEditUserEmail">Email</label>
+                    <input  id="input-modalEditUserEmail"
+                            class="form-control"
+                            placeholder="Email"
+                            v-model="modalEditUser.inputEmail.value"
+                            @input="modalEditUserEmail_change">
+                    <span class="help-block">{{modalEditUser.inputEmail.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalEditUser.inputPassword.hasError">
+                    <label for="input-modalEditUserPassword">Contraseña</label>
+                    <input  id="input-modalEditUserPassword"
+                            class="form-control"
+                            placeholder="Constraseña"
+                            type="password"
+                            v-model="modalEditUser.inputPassword.value"
+                            @input="modalEditUserPassword_change">
+                    <span class="help-block">{{modalEditUser.inputPassword.msgError}}</span>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalEditUser.inputPasswordRepeat.hasError">
+                    <label for="input-modalEditUserPasswordRepeat">Repetición Contraseña</label>
+                    <input  id="input-modalEditUserPasswordRepeat"
+                            class="form-control"
+                            placeholder="Repetición Contraseña"
+                            type="password"
+                            v-model="modalEditUser.inputPasswordRepeat.value"
+                            @input="modalEditUserPasswordRepeat_change">
+                    <span class="help-block">{{modalEditUser.inputPasswordRepeat.msgError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Departamento</label>
+                    <div class="bootstrap-filestyle input-group">
+                        <select id="input-modalEditUserSelectDepartment"
+                                class="form-control"
+                                v-model="modalEditUser.inputDepartment.value">
+                            <option v-bind:value="department.id" v-for="department in departments">
+                                {{department.name}}
+                            </option>
+                        </select>
+
+                        <!--Button nuevo departamento-->
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default " onclick="moduleDepartments.modalCreateOpen()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                        <!--Fin Button nuevo departamento-->
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalEditDepartmentEdit"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalEditUser.btnSave.disabled"
+                        onclick="moduleUsers.edit()">Guardar Usuario
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL REMOVE USER                                               -->
+<!----------------------------------------------------------------------------------------------------->
+

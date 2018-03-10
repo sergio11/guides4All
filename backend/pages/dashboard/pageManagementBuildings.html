@@ -1,0 +1,337 @@
+<!----------------------------------------------------------------------------------------------------->
+<!--                                    PAGE BUILDINGS                                               -->
+<!----------------------------------------------------------------------------------------------------->
+<div id="pageManagementBuildings" class="content-wrapper page">
+    <section class="content-header">
+        <h1>
+            Edificios
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Gestión</a></li>
+            <li><a href="#">Edificios</a></li>
+        </ol>
+    </section>
+    <!-- Main content -->
+    <section class="content">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title"></h3>
+
+                <div class="col-sm-3 pull-right">
+                    <center>
+                        <b>Planta: </b>{{mapBuildings.currentFloor}}
+                    </center>
+                    <br>
+                    <div class="btn-group btn-group-justified">
+                        <a href="#" class="btn btn-default" onclick="moduleBuildings.openModalCreateFloor()">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default" onclick="moduleBuildings.openModalRemoveFloor()">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default" onclick="moduleBuildings.floorCornerEdit()">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default" onclick="moduleBuildings.openModalEditImageFloor()">
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default" onclick="appVue.mapBuildings.floorDown()">
+                            <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default" onclick="appVue.mapBuildings.floorUp()">
+                            <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                        </a>
+
+
+                    </div>
+                </div>
+
+                <div class="col-sm-2 pull-right">
+                    <center>
+                        <b>Edificio: </b>{{mapBuildings.currentBuildingName}}
+                    </center>
+                    <br>
+                    <div class="btn-group btn-group-justified">
+                        <a href="#" class="btn btn-default col-sm-1" onclick="moduleBuildings.openModalEditBuilding()">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                        </a>
+                        <a href="#" class="btn btn-default col-sm-1"
+                           onclick="moduleBuildings.openModalRemoveBuilding()">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="customMap" id="mapBuildings"></div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL CREATE BUILDINGS                                          -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-createBuilding">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Crear Edificio</h4>
+            </div>
+            <div class=" modal-body">
+                <div v-bind:class="'form-group '+ modalCreateBuilding.inputName.hasError">
+                    <label for="input-modalCreateBuildingName">Nombre</label>
+                    <input id="input-modalCreateBuildingName"
+                           type="text"
+                           class="form-control"
+                           placeholder="Nombre"
+                           v-model="modalCreateBuilding.inputName.value"
+                           @input="modalCreateBuildingName_change">
+                    <span class="help-block">{{modalCreateBuilding.inputName.msgError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-modalCreateBuildingFloor">Número de planta</label>
+                    <div class="bootstrap-filestyle input-group">
+
+                        <input id="input-modalCreateBuildingFloor"
+                               type="text"
+                               class="form-control"
+                               placeholder="Número de planta"
+                               v-model="modalCreateBuilding.inputFloor.value"
+                               readonly>
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default "
+                                       onclick="moduleBuildings.modalCreateBuildingFloorDown()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default " onclick="moduleBuildings.modalCreateBuildingFloorUp()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                    </div>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalCreateBuilding.inputImage.hasError">
+                    <label for="input-modalCreateBuildingImage">Imagen planta baja</label>
+                    <input id="input-modalCreateBuildingImage"
+                           type="file"
+                           class="form-control"
+                           placeholder="Imagen"
+                           @change="modalCreateBuildingImage_change">
+                    <span class="help-block">{{modalCreateBuilding.inputImage.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="modalCreateBuilding"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalCreateBuilding.btnCreate.disabled"
+                        onclick="moduleBuildings.create()">Crear Edificio
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                   MODAL EDIT BUILDING                                           -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-editBuilding">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Editar Edificio</h4>
+            </div>
+
+            <div class="modal-body">
+                <div v-bind:class="'form-group '+ modalEditBuilding.inputName.hasError">
+                    <label for="input-modalEditBuildingName">Nombre</label>
+                    <input id="input-modalEditBuildingName"
+                           class="form-control"
+                           placeholder="Nombre Edificio"
+                           v-model="modalEditBuilding.inputName.value"
+                           @input="modalEditBuildingName_change">
+                    <span class="help-block">{{modalEditBuilding.inputName.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalEditBuildingSave"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalEditBuilding.btnSave.disabled"
+                        onclick="moduleBuildings.edit()">Guardar Edificio
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL REMOVE BUILDING                                           -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-removeBuilding">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Eliminar Edificio</h4>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar el edificio <b>{{modalDeleteBuilding.buildingName}}</b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalDeleteBuildingDelete" onclick="moduleBuildings.remove()" type="button"
+                        class="btn btn-danger">Eliminar Elificio
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL CREATE FLOOR                                          -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-createFloor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Crear Planta</h4>
+            </div>
+            <div class=" modal-body">
+
+                <div class="form-group">
+                    <label for="input-modalCreateFloorFloor">Número de planta</label>
+                    <div class="bootstrap-filestyle input-group">
+
+                        <input id="input-modalCreateFloorFloor"
+                               type="text"
+                               class="form-control"
+                               placeholder="Número de planta"
+                               v-model="modalCreateFloor.inputFloor.value"
+                               readonly>
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default " onclick="moduleBuildings.modalCreateFloorFloorDown()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                        <span class="group-span-filestyle input-group-btn" tabindex="0">
+                                <label class="btn btn-default " onclick="moduleBuildings.modalCreateFloorFloorUp()">
+                                    <span class="buttonText">
+                                        <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                                    </span>
+                                </label>
+                        </span>
+                    </div>
+                </div>
+
+                <div v-bind:class="'form-group '+ modalCreateFloor.inputImage.hasError">
+                    <label for="input-modalCreateFloorImage">Imagen planta</label>
+                    <input id="input-modalCreateFloorImage"
+                           type="file"
+                           class="form-control"
+                           placeholder="Imagen"
+                           @change="modalCreateFloorImage_change">
+                    <span class="help-block">{{modalCreateFloor.inputImage.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="modalCreateFloor"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalCreateFloor.btnCreate.disabled"
+                        onclick="moduleBuildings.createFloor()">Crear Planta
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL REMOVE FLOOR                                         -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-removeFloor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Eliminar Planta</h4>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar la planta número <b>{{modalDeleteFloor.floor}}</b> del edificio con
+                    en nombre <b>{{modalDeleteFloor.buildingName}}</b>
+                    ?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="button-modalDeleteFloorDelete" onclick="moduleBuildings.removeFloor()" type="button"
+                        class="btn btn-danger">Eliminar Planta
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!----------------------------------------------------------------------------------------------------->
+<!--                                 MODAL EDIT IMAGE FLOOR                                          -->
+<!----------------------------------------------------------------------------------------------------->
+<div class="modal fade" id="modal-editImageFloor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span></button>
+                <h4 class="modal-title">Editar Imagen Planta</h4>
+            </div>
+            <div class=" modal-body">
+
+                <div v-bind:class="'form-group '+ modalEditImageFloor.inputImage.hasError">
+                    <label for="input-modalEditImageFloorImage">Imagen planta</label>
+                    <input id="input-modalEditImageFloorImage"
+                           type="file"
+                           class="form-control"
+                           placeholder="Imagen"
+                           @change="modalEditImageFloorImage_change">
+                    <span class="help-block">{{modalEditImageFloor.inputImage.msgError}}</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar
+                </button>
+                <button id="modalEditImageFloor"
+                        type="button"
+                        v-bind:class="'btn btn-primary' + modalEditImageFloor.btnEdit.disabled"
+                        onclick="moduleBuildings.editImageFloor()">Guardar Imagen Planta
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="login-box" id="loginPage" >
+        <div class="login-logo">
+            <h1 style="font-size: 150%;">Guide<b>4</b>all</h1>
+        </div>
+    <div id="boxForm" class="login-box-body">
+        <center>
+            <img class="img-reposive" src="img/logoLogin.png" style="width: 40%">
+        </center>
+        <p class="login-box-msg"><b>Inicia sesión</b></p>
+
+        <form action="javascript:moduleLogin.login()" method="post">
+            <div class="form-group has-feedback">
+                <input id="inputEmail" type="email" class="form-control" placeholder="Email" value="admin@guide4all.com">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input id="inputPassword" type="password" class="form-control" placeholder="Password" value="pass">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div id="alertError" class="alert alert-danger hidden">
+                Datos inválidos
+            </div>
+            <div class="col-xs-4 pull-right">
+                <button id="btnSubmitLogin" type="submit" class="btn btn-primary btn-block btn-flat disabled">
+                    Login
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+</div>
